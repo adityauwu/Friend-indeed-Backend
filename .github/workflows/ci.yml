@@ -17,14 +17,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: akhileshns/heroku-deploy@v3.12.12
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-
+      
         with:
           node-version: ${{ matrix.node-version }}
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "<friendin-deed>"
-          heroku_email: "<sanyambharani07@gmail.com>"
+          heroku_app_name: "friendin-deed"
+          heroku_email: "sanyambharani07@gmail.com"
           usedocker: true
           cache: 'npm'
       - run: npm install
