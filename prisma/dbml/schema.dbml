@@ -2,32 +2,91 @@
 //// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 //// ------------------------------------------------------
 
+Table EmailChange {
+  token String [pk]
+  newEmail String [not null]
+  userId Int [unique, not null]
+  user User [not null]
+  validUntil DateTime [not null]
+}
+
+Table EmailVerification {
+  token String [pk]
+  userId Int [unique, not null]
+  user User [not null]
+  validUntil DateTime [not null]
+}
+
+Table PasswordReset {
+  token String [pk]
+  userId Int [unique, not null]
+  user User [not null]
+  validUntil DateTime [not null]
+}
+
 Table User {
-  id String [pk]
-  createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [not null]
+  id Int [pk, increment]
+  username String [unique, not null]
   email String [unique, not null]
-  password String [not null]
-  firstname String
-  lastname String
-  posts Post [not null]
-  role Role [not null]
+  passwordHash String [not null]
+  firstName String [not null]
+  lastName String [not null]
+  middleName String
+  image String
+  emailVerified Boolean [not null, default: false]
+  birthDate DateTime
+  registrationDate DateTime [not null]
+  emailChange EmailChange
+  emailVerification EmailVerification
+  passwordReset PasswordReset
 }
 
-Table Post {
+Table Therapist {
   id String [pk]
+  name String [not null]
+  email String [unique, not null]
+  imageUrl String
+  about String
+  onboarded Boolean [default: false]
+  consultationFee Int
+  categories TherapistCategories [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-  published Boolean [not null]
-  title String [not null]
-  content String
-  author User
-  authorId String
 }
 
-Enum Role {
-  ADMIN
-  USER
+Table TherapistCategories {
+  id String [pk]
+  therapist Therapist
+  category Category
+  therapistId String
+  categoryId String
 }
 
-Ref: Post.authorId > User.id
+Table Patient {
+  id String [pk]
+  name String [not null]
+  email String [unique, not null]
+  imageUrl String
+  active Boolean [default: true]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Category {
+  id String [pk]
+  name String [not null]
+  active Boolean [default: true]
+  therapist TherapistCategories [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Ref: EmailChange.userId - User.id [delete: Cascade]
+
+Ref: EmailVerification.userId - User.id [delete: Cascade]
+
+Ref: PasswordReset.userId - User.id [delete: Cascade]
+
+Ref: TherapistCategories.therapistId > Therapist.id
+
+Ref: TherapistCategories.categoryId > Category.id

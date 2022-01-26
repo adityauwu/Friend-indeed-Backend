@@ -1,51 +1,33 @@
-import { ValidationPipe } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { PrismaClientExceptionFilter, PrismaService } from 'nestjs-prisma';
+import { ValidationPipe } from '@nestjs/common';
+import * as helmet from 'helmet';
+import * as requestIp from 'request-ip';
 import { AppModule } from './app.module';
-import {
-  CorsConfig,
-  NestConfig,
-  SwaggerConfig,
-} from './configs/config.interface';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  // CORS is enabled
+  const app = await NestFactory.create(AppModule, { cors: true });
 
-  // Validation
-  app.useGlobalPipes(new ValidationPipe());
+  // Request Validation
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
-  // enable shutdown hook
-  const prismaService: PrismaService = app.get(PrismaService);
-  prismaService.enableShutdownHooks(app);
+  app.use(requestIp.mw());
 
-  // Prisma Client Exception Filter for unhandled exceptions
-  const { httpAdapter } = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
+  // Helmet Middleware against known security vulnerabilities
+  app.use(helmet());
 
-  const configService = app.get(ConfigService);
-  const nestConfig = configService.get<NestConfig>('nest');
-  const corsConfig = configService.get<CorsConfig>('cors');
-  const swaggerConfig = configService.get<SwaggerConfig>('swagger');
+  // Swagger API Documentation
+  const options = new DocumentBuilder()
+    .setTitle('')
+    .setDescription('NestJS Hackathon Starter API description')
+    .setVersion('0.1.0')
+    .addBearerAuth()
+    .build();
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup('api', app, document);
 
-  // Swagger Api
-  if (swaggerConfig.enabled) {
-    const options = new DocumentBuilder()
-      .setTitle(swaggerConfig.title || 'Nestjs')
-      .setDescription(swaggerConfig.description || 'The nestjs API description')
-      .setVersion(swaggerConfig.version || '1.0')
-      .build();
-    const document = SwaggerModule.createDocument(app, options);
-
-    SwaggerModule.setup(swaggerConfig.path || 'api', app, document);
-  }
-
-  // Cors
-  if (corsConfig.enabled) {
-    app.enableCors();
-  }
-
-  await app.listen(process.env.PORT || nestConfig.port || 3000);
+  await app.listen(process.env.PORT || 3000, '127.0.0.1');
 }
+
 bootstrap();

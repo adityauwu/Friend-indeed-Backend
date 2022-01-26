@@ -4,8 +4,12 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "plugins": [
-      "@nestjs/swagger/plugin",
-      "@nestjs/graphql/plugin"
+      {
+        "name": "@nestjs/swagger/plugin",
+        "options": {
+          "dtoFileNameSuffix": [".model.ts", ".request.ts", ".response.ts"]
+        }
+      }
     ]
   }
 }
