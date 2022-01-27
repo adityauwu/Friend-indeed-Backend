@@ -19,15 +19,15 @@ async function bootstrap() {
 
   // Swagger API Documentation
   const options = new DocumentBuilder()
-    .setTitle('')
-    .setDescription('NestJS Hackathon Starter API description')
-    .setVersion('0.1.0')
+    .setTitle('Friend Indeed Backend')
+    .setDescription('APi Documentation')
+    .setVersion('1.0.0')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api-docs', app, document);
 
-  await app.listen(process.env.PORT || 3000, '127.0.0.1');
+  await app.listen(process.env.PORT || 5000, '127.0.0.1');
 }
 
 bootstrap();

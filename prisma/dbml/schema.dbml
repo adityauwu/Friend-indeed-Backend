@@ -2,56 +2,19 @@
 //// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 //// ------------------------------------------------------
 
-Table EmailChange {
-  token String [pk]
-  newEmail String [not null]
-  userId Int [unique, not null]
-  user User [not null]
-  validUntil DateTime [not null]
-}
-
-Table EmailVerification {
-  token String [pk]
-  userId Int [unique, not null]
-  user User [not null]
-  validUntil DateTime [not null]
-}
-
-Table PasswordReset {
-  token String [pk]
-  userId Int [unique, not null]
-  user User [not null]
-  validUntil DateTime [not null]
-}
-
-Table User {
-  id Int [pk, increment]
-  username String [unique, not null]
-  email String [unique, not null]
-  passwordHash String [not null]
-  firstName String [not null]
-  lastName String [not null]
-  middleName String
-  image String
-  emailVerified Boolean [not null, default: false]
-  birthDate DateTime
-  registrationDate DateTime [not null]
-  emailChange EmailChange
-  emailVerification EmailVerification
-  passwordReset PasswordReset
-}
-
 Table Therapist {
   id String [pk]
-  name String [not null]
+  name String
   email String [unique, not null]
   imageUrl String
   about String
+  rating Int
+  experience Int
   onboarded Boolean [default: false]
   consultationFee Int
   categories TherapistCategories [not null]
-  createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`]
+  updatedAt DateTime
 }
 
 Table TherapistCategories {
@@ -68,24 +31,18 @@ Table Patient {
   email String [unique, not null]
   imageUrl String
   active Boolean [default: true]
-  createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [not null]
+  createdAt DateTime [default: `now()`]
+  updatedAt DateTime
 }
 
 Table Category {
   id String [pk]
   name String [not null]
   active Boolean [default: true]
-  therapist TherapistCategories [not null]
-  createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [not null]
+  therapists TherapistCategories [not null]
+  createdAt DateTime [default: `now()`]
+  updatedAt DateTime
 }
-
-Ref: EmailChange.userId - User.id [delete: Cascade]
-
-Ref: EmailVerification.userId - User.id [delete: Cascade]
-
-Ref: PasswordReset.userId - User.id [delete: Cascade]
 
 Ref: TherapistCategories.therapistId > Therapist.id
 

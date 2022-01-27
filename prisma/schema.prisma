@@ -11,98 +11,46 @@ generator client {
 generator dbml {
   provider = "prisma-dbml-generator"
 }
-model EmailChange {
-  token      String   @id @db.Char(21)
-  newEmail   String
-  userId     Int      @unique
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  validUntil DateTime @default(dbgenerated("(timezone('utc'::text, now()) + '2 days'::interval)")) @db.Timestamp(6)
-
-  @@map("email-change")
-}
-
-model EmailVerification {
-  token      String   @id @db.Char(21)
-  userId     Int      @unique
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  validUntil DateTime @default(dbgenerated("(timezone('utc'::text, now()) + '2 days'::interval)")) @db.Timestamp(6)
-
-  @@map("email-verification")
-}
-
-model PasswordReset {
-  token      String   @id @db.Char(21)
-  userId     Int      @unique
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  validUntil DateTime @default(dbgenerated("(timezone('utc'::text, now()) + '2 days'::interval)")) @db.Timestamp(6)
-
-  @@map("password-reset")
-}
-
-model User {
-  id                Int                @id @default(autoincrement())
-  username          String             @unique
-  email             String             @unique
-  passwordHash      String
-  firstName         String
-  lastName          String
-  middleName        String?
-  image             String?
-  emailVerified     Boolean            @default(false)
-  birthDate         DateTime?          @db.Date
-  registrationDate  DateTime           @default(dbgenerated("timezone('UTC'::text, now())")) @db.Timestamp(6)
-  emailChange       EmailChange?
-  emailVerification EmailVerification?
-  passwordReset     PasswordReset?
-
-
-  @@map("user")
-}
-
 
 model Therapist {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  imageUrl  String?
-  about     String?
-  onboarded Boolean?   @default(value: false)
-  consultationFee Int?
-  categories  TherapistCategories[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
-              
+  id                String                    @id @default(cuid())
+  name              String?
+  email             String                    @unique
+  imageUrl          String?
+  about             String?
+  rating            Int?
+  experience        Int?
+  onboarded         Boolean?                  @default(value: false)
+  consultationFee   Int?
+  categories        TherapistCategories[]
+  createdAt         DateTime?                 @default(now())
+  updatedAt         DateTime?                 @updatedAt         
 }
 
 model TherapistCategories{
-  id        String   @id @default(cuid())
-  therapist   Therapist? @relation(fields: [therapistId], references: [id])
-  category    Category?  @relation(fields: [categoryId], references: [id])
-  therapistId String?
-  categoryId  String?
+  id                String                    @id @default(cuid())
+  therapist         Therapist?                @relation(fields: [therapistId], references: [id])
+  category          Category[]                @relation(fields: [categoryId], references: [id])
+  therapistId       String?
+  categoryId        String?
 }
 
 model Patient {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  imageUrl  String?
-  active    Boolean?  @default(value: true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  id                String                    @id @default(cuid())
+  name              String
+  email             String                    @unique
+  imageUrl          String?
+  active            Boolean?                  @default(value: true)
+  createdAt         DateTime?                 @default(now())
+  updatedAt         DateTime?                 @updatedAt
 }
 
 
 model Category {
-  id        String   @id @default(cuid())
-  name      String   
-  active    Boolean?  @default(value: true)
-  therapists TherapistCategories[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  id                String                    @id @default(cuid())
+  name              String   
+  active            Boolean?                  @default(value: true)
+  therapists        TherapistCategories[]
+  createdAt        DateTime?                 @default(now())
+  updatedAt         DateTime?                 @updatedAt
 }
-
-

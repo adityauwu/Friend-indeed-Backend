@@ -1,52 +1,43 @@
 
-import { Injectable } from '@nestjs/common';
-import { TherapistDto } from './therapist.dto';
+import { Injectable, Logger } from '@nestjs/common';
+import { FiltersDto, TherapistDto } from './therapist.dto';
 import { PrismaService } from '../common/services/prisma.service';
+import { Prisma, Therapist } from '@prisma/client';
 
 @Injectable()
 export class TherapistService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async createTherapist(therapist: TherapistDto) {
-    
-    return this.prismaService.therapist.create({
-      data: {
-        name: therapist.name,
-        email: therapist.email,
-        imageUrl: therapist.imageUrl,
-        about: therapist.about,
-
-        categories: {
-          create: [
-            {
-              category: {
-                create: {
-                  name: 'depression',
-                },
-              },
-            },
-            // { category: { connect: { id: '' } } },
-          ],
-        },
-      },
-      include: {
-        categories: true,
-      },
-    });
+  async createTherapist(input: TherapistDto) {
+    try {
+      return {
+        data: await this.prismaService.therapist.create({ data: input }),
+        success: true
+      }
+    } catch (e) {
+      Logger.error(e.message)
+      return {
+        error: e.message,
+        success: false
+      }
+    }
   }
 
-  async findTherapist() {
-    return this.prismaService.therapist.findMany({
-      where: {
-        categories: {
-          some: {
-            category: {
-              name: 'depression',
-            },
-          },
+  async getAllTherapists(query: FiltersDto) {
+    try {
+      const data = await this.prismaService.therapist.findMany({
+        where: { 
+          categories: { some: { categoryId: query.category } },
+          onboarded: true,
+          consultationFee: { lte: parseInt(query.fee) },
         },
-      },
-    })
+        include: { categories: { include: { category: true } } }
+      })
+      return {  data, success: true }
+    } catch (e) {
+      Logger.error(e.message);
+      return { error: e.message, success: false }
+    }
   }
 
   

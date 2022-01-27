@@ -1,30 +1,29 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
-  Param,
-  Patch,
   Post,
-  Req,
-  UseGuards,
+  Query,
+  Param,
+  ValidationPipe,
 } from '@nestjs/common';
 import { TherapistService } from './therapist.service';
-import { TherapistDto } from './therapist.dto';
+import { FiltersDto, TherapistDto } from './therapist.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('therapist')
+@ApiTags('Therapist')
 export default class TherapistController {
   constructor(private readonly therapistService: TherapistService) {}
 
   @Post()
-  async createTherapist(@Body() therapist: TherapistDto) {
-    return this.therapistService.createTherapist(therapist);
+  async createTherapist(@Body() input) {
+    return this.therapistService.createTherapist(input);
   }
 
   @Get()
-  async findTherapist() {
-    return this.therapistService.findTherapist();
+  async getAllTherapists(@Query() query: FiltersDto) {
+    return this.therapistService.getAllTherapists(query);
   }
-
 
 }

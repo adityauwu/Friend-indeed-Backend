@@ -15,7 +15,7 @@ export class TherapistDto {
 
   @IsUrl()
   @IsOptional()
-  imageUrl?: string;
+  image_url?: string;
 
   @IsString()
   @IsOptional()
@@ -25,7 +25,23 @@ export class TherapistDto {
   @IsOptional()
   onboarded?: boolean;
 
+}
+
+export class FiltersDto {
+
+  @IsNumber()
   @IsOptional()
-  @IsNumber({}, { each: true })
-  categoryIds?: number[];
+  rating?: number;
+
+  @IsString()
+  @IsOptional()
+  fee?: string;
+
+  @IsNumber()
+  @IsOptional()
+  experience?: number;
+
+  @IsString()
+  @IsOptional()
+  category?: string;
 }
