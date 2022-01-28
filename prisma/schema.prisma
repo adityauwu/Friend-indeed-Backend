@@ -30,7 +30,7 @@ model Therapist {
 model TherapistCategories{
   id                String                    @id @default(cuid())
   therapist         Therapist?                @relation(fields: [therapistId], references: [id])
-  category          Category[]                @relation(fields: [categoryId], references: [id])
+  category          Category?                 @relation(fields: [categoryId], references: [id])
   therapistId       String?
   categoryId        String?
 }
@@ -48,9 +48,9 @@ model Patient {
 
 model Category {
   id                String                    @id @default(cuid())
-  name              String   
+  name              String                    @unique
   active            Boolean?                  @default(value: true)
   therapists        TherapistCategories[]
-  createdAt        DateTime?                 @default(now())
+  createdAt         DateTime?                 @default(now())
   updatedAt         DateTime?                 @updatedAt
 }

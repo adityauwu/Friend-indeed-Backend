@@ -37,7 +37,7 @@ Table Patient {
 
 Table Category {
   id String [pk]
-  name String [not null]
+  name String [unique, not null]
   active Boolean [default: true]
   therapists TherapistCategories [not null]
   createdAt DateTime [default: `now()`]

@@ -29,17 +29,17 @@ export class TherapistDto {
 
 export class FiltersDto {
 
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  rating?: number;
+  rating?: string;
 
   @IsString()
   @IsOptional()
   fee?: string;
 
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  experience?: number;
+  experience?: string;
 
   @IsString()
   @IsOptional()
