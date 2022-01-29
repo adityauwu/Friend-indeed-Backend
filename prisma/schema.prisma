@@ -1,56 +1,72 @@
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
 generator client {
   provider = "prisma-client-js"
-  // previewFeatures = []
 }
 
 generator dbml {
   provider = "prisma-dbml-generator"
 }
 
-model Therapist {
-  id                String                    @id @default(cuid())
-  name              String?
-  email             String                    @unique
-  imageUrl          String?
-  about             String?
-  rating            Int?
-  experience        Int?
-  onboarded         Boolean?                  @default(value: false)
-  consultationFee   Int?
-  categories        TherapistCategories[]
-  createdAt         DateTime?                 @default(now())
-  updatedAt         DateTime?                 @updatedAt         
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-model TherapistCategories{
-  id                String                    @id @default(cuid())
-  therapist         Therapist?                @relation(fields: [therapistId], references: [id])
-  category          Category?                 @relation(fields: [categoryId], references: [id])
-  therapistId       String?
-  categoryId        String?
+model Therapist {
+  id              String                @id @default(cuid())
+  name            String?
+  email           String                @unique
+  imageUrl        String?
+  about           String?
+  rating          Int?
+  experience      Int?
+  onboarded       Boolean?              @default(false)
+  consultationFee Int?
+  createdAt       DateTime?             @default(now())
+  updatedAt       DateTime?             @updatedAt
+  active          Boolean               @default(true)
+  feedback        Feedback[]
+  categories      TherapistCategories[]
+}
+
+model TherapistCategories {
+  id          String     @id @default(cuid())
+  therapistId String?
+  categoryId  String?
+  experience  Int        @default(0)
+  category    Category?  @relation(fields: [categoryId], references: [id])
+  therapist   Therapist? @relation(fields: [therapistId], references: [id])
 }
 
 model Patient {
-  id                String                    @id @default(cuid())
-  name              String
-  email             String                    @unique
-  imageUrl          String?
-  active            Boolean?                  @default(value: true)
-  createdAt         DateTime?                 @default(now())
-  updatedAt         DateTime?                 @updatedAt
+  id        String     @id @default(cuid())
+  name      String
+  email     String     @unique
+  imageUrl  String?
+  active    Boolean?   @default(true)
+  createdAt DateTime?  @default(now())
+  updatedAt DateTime?  @updatedAt
+  feedback  Feedback[]
 }
 
-
 model Category {
-  id                String                    @id @default(cuid())
-  name              String                    @unique
-  active            Boolean?                  @default(value: true)
-  therapists        TherapistCategories[]
-  createdAt         DateTime?                 @default(now())
-  updatedAt         DateTime?                 @updatedAt
+  id         String                @id @default(cuid())
+  name       String                @unique
+  active     Boolean?              @default(true)
+  createdAt  DateTime?             @default(now())
+  updatedAt  DateTime?             @updatedAt
+  therapists TherapistCategories[]
+}
+
+model Feedback {
+  id          String    @id @default(cuid())
+  patientId   String
+  therapistId String
+  rating      Int
+  comment     String
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
+  patient     Patient   @relation(fields: [patientId], references: [id])
+  therapist   Therapist @relation(fields: [therapistId], references: [id])
+
+  @@unique([patientId, therapistId])
 }

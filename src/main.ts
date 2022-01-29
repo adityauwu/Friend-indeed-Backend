@@ -13,6 +13,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
   app.use(requestIp.mw());
+  app.useGlobalPipes(new ValidationPipe())
 
   // Helmet Middleware against known security vulnerabilities
   app.use(helmet());

@@ -12,17 +12,20 @@ Table Therapist {
   experience Int
   onboarded Boolean [default: false]
   consultationFee Int
-  categories TherapistCategories [not null]
   createdAt DateTime [default: `now()`]
   updatedAt DateTime
+  active Boolean [not null, default: true]
+  feedback Feedback [not null]
+  categories TherapistCategories [not null]
 }
 
 Table TherapistCategories {
   id String [pk]
-  therapist Therapist
-  category Category
   therapistId String
   categoryId String
+  experience Int [not null, default: 0]
+  category Category
+  therapist Therapist
 }
 
 Table Patient {
@@ -33,17 +36,38 @@ Table Patient {
   active Boolean [default: true]
   createdAt DateTime [default: `now()`]
   updatedAt DateTime
+  feedback Feedback [not null]
 }
 
 Table Category {
   id String [pk]
   name String [unique, not null]
   active Boolean [default: true]
-  therapists TherapistCategories [not null]
   createdAt DateTime [default: `now()`]
   updatedAt DateTime
+  therapists TherapistCategories [not null]
 }
+
+Table Feedback {
+  id String [pk]
+  patientId String [not null]
+  therapistId String [not null]
+  rating Int [not null]
+  comment String [not null]
+  createdAt DateTime [default: `now()`]
+  updatedAt DateTime
+  patient Patient [not null]
+  therapist Therapist [not null]
+
+  indexes {
+    (patientId, therapistId) [unique]
+  }
+}
+
+Ref: TherapistCategories.categoryId > Category.id
 
 Ref: TherapistCategories.therapistId > Therapist.id
 
-Ref: TherapistCategories.categoryId > Category.id
+Ref: Feedback.patientId > Patient.id
+
+Ref: Feedback.therapistId > Therapist.id

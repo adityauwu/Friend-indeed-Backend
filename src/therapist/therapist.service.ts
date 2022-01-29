@@ -1,6 +1,6 @@
 
 import { Injectable, Logger } from '@nestjs/common';
-import { FiltersDto, TherapistDto } from './therapist.dto';
+import { FiltersDto, TherapistDto, UpdateTherapistDto } from './therapist.dto';
 import { PrismaService } from '../common/services/prisma.service';
 @Injectable()
 export class TherapistService {
@@ -20,17 +20,17 @@ export class TherapistService {
 
   async getAllTherapists(query: FiltersDto) {
     try {
-      let q: any = { onboarded: true }
+      let q: any = { onboarded: true, active: true }
       if(query.category) q = { ...q, categories: { some: { categoryId: query.category } } }
-      if(query.rating) q = { ...q, rating: { lte: parseInt(query.rating) } }
-      if(query.experience) q = { ...q, experience: { lte: parseInt(query.experience) } }
-      if(query.fee) q = { ...q, consultationFee: { lte: parseInt(query.fee) } }
+      if(query.rating) q = { ...q, rating: { lte: query.rating } }
+      if(query.experience) q = { ...q, experience: { lte: query.experience } }
+      if(query.fee) q = { ...q, consultationFee: { lte: query.fee } }
 
       const data = await this.prismaService.therapist.findMany({
         where: { 
           ...q
         },
-        include: { categories: { include: { category: true } } }
+        include: { _count: true, categories: { include: { category: true } }, feedback: true }
       })
       return {  data, success: true }
     } catch (e) {
@@ -39,7 +39,21 @@ export class TherapistService {
     }
   }
 
-  async updateTherapist(id: string, input: Partial<TherapistDto>) {
+  async getTherapistById(id: string) {
+    try {
+      return {
+        data: await this.prismaService.therapist.findUnique({
+          where: { id },
+          include: { categories: true, feedback: true }
+        }),
+        success: true
+      }
+    } catch (e) {
+      throw e.message;
+    }
+  }
+
+  async updateTherapist(id: string, input: UpdateTherapistDto) {
     try {
       const updated = await this.prismaService.therapist.update({
         where: { id },
@@ -51,7 +65,6 @@ export class TherapistService {
       return { error: e.message, success: false }
     }
   }
-
   
 }
 

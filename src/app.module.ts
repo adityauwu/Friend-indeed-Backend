@@ -4,6 +4,8 @@ import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerBehindProxyGuard } from './common/guards/throttler-behind-proxy.guard';
 import { AppController } from './app.controller';
 import {TherapistModule} from './therapist/therapist.module'
+import { FeedbackModule } from './feedback/feedback.module';
+import { CategoryModule } from './category/category.module';
 @Module({
   imports: [
     ThrottlerModule.forRoot({
@@ -11,6 +13,8 @@ import {TherapistModule} from './therapist/therapist.module'
       limit: 50,
     }),
     TherapistModule,
+    FeedbackModule,
+    CategoryModule,
   ],
   providers: [
     {
