@@ -17,6 +17,7 @@ async function bootstrap() {
 
   // Helmet Middleware against known security vulnerabilities
   app.use(helmet());
+  app.setGlobalPrefix('api/v1')
 
   // Swagger API Documentation
   const options = new DocumentBuilder()

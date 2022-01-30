@@ -30,7 +30,16 @@ export class TherapistService {
         where: { 
           ...q
         },
-        include: { _count: true, categories: { include: { category: true } }, feedback: true }
+        select: {
+          id: true,
+          name: true,
+          imageUrl: true,
+          experience: true,
+          consultationFee: true,
+          rating: true,
+          categories: { include: { category: true } }
+        },
+        // include: { _count: true, categories: { include: { category: true } }, feedback: true }
       })
       return {  data, success: true }
     } catch (e) {

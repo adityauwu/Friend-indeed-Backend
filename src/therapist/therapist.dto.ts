@@ -28,6 +28,16 @@ export class TherapistDto {
   about?: string;
 
   @ApiProperty({ required: false })
+  @IsInt()
+  @IsOptional()
+  consultationFee?: number;
+
+  @ApiProperty({ required: false })
+  @IsInt()
+  @IsOptional()
+  experience?: number;
+
+  @ApiProperty({ required: false })
   @IsBoolean()
   @IsOptional()
   onboarded?: boolean;
