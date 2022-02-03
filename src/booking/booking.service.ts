@@ -1,21 +1,17 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { PrismaService } from '../common/services/prisma.service';
-import {
-  CategoryDto,
-  FilterCategoryDto,
-  TherapistCategoryDto,
-  UpdateCategoryDto,
-} from './category.dto';
+import { PrismaService } from 'src/common/services/prisma.service';
+import { CreateBookingDto, FilterBookingDto, Status } from './dto/create-booking.dto';
+import { UpdateBookingDto } from './dto/update-booking.dto';
 
 @Injectable()
-export class CategoryService {
+export class BookingService {
   constructor(private prismaService: PrismaService) {}
 
-  async createCategory(input: CategoryDto) {
+  async create(input: CreateBookingDto) {
     try {
       return {
-        data: await this.prismaService.category.create({ data: { ...input } }),
+        data: await this.prismaService.booking.create({ data: { ...input } }),
         success: true,
       };
     } catch (e) {
@@ -30,10 +26,33 @@ export class CategoryService {
     }
   }
 
-  async updateCategory(id: string, input: UpdateCategoryDto) {
+  async findAll({ status }: FilterBookingDto) {
     try {
       return {
-        data: await this.prismaService.category.update({
+        data: await this.prismaService.booking.findMany({
+          where: {
+            status,
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+        }),
+        success: true,
+      };
+    } catch (e) {
+      Logger.error(e.message);
+      return { error: e.message, success: false };
+    }
+  }
+
+  findOne(id: number) {
+    return `This action returns a #${id} booking`;
+  }
+
+  async update(id: string, input: UpdateBookingDto) {
+    try {
+      return {
+        data: await this.prismaService.booking.update({
           where: { id },
           data: { ...input },
         }),
@@ -45,27 +64,12 @@ export class CategoryService {
     }
   }
 
-  async getAllCategories({ active }: FilterCategoryDto) {
+  async remove(id: string) {
     try {
       return {
-        data: await this.prismaService.category.findMany({ where: { active } }),
-        success: true,
-      };
-    } catch (e) {
-      Logger.error(e.message);
-      return { error: e.message, success: false };
-    }
-  }
-
-  async addCategoryToTherapist(input: TherapistCategoryDto[]) {
-    try {
-      const res = await Promise.all(
-        input.map((item) =>
-          this.prismaService.therapistCategories.create({ data: item }),
-        ),
-      );
-      return {
-        data: res,
+        data: await this.prismaService.booking.delete({
+          where: { id },
+        }),
         success: true,
       };
     } catch (e) {
@@ -74,3 +78,5 @@ export class CategoryService {
     }
   }
 }
+
+

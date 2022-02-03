@@ -17,6 +17,8 @@ Table Therapist {
   active Boolean [not null, default: true]
   feedback Feedback [not null]
   categories TherapistCategories [not null]
+  qualification String [not null]
+  booking Booking [not null]
 }
 
 Table TherapistCategories {
@@ -37,6 +39,9 @@ Table Patient {
   createdAt DateTime [default: `now()`]
   updatedAt DateTime
   feedback Feedback [not null]
+  booking Booking [not null]
+  subscriptionId String
+  subscription Subscription
 }
 
 Table Category {
@@ -64,10 +69,45 @@ Table Feedback {
   }
 }
 
+Table Subscription {
+  id String [pk]
+  fee Int [not null]
+  active Boolean [default: true]
+  patientId String
+  patient Patient [not null]
+  createdAt DateTime [default: `now()`]
+  updatedAt DateTime
+}
+
+Table Booking {
+  id String [pk]
+  status Status [not null, default: 'PENDING']
+  fees Int [not null]
+  patientId String [not null]
+  therapistId String [not null]
+  patient Patient [not null]
+  therapist Therapist [not null]
+  createdAt DateTime [default: `now()`]
+  updatedAt DateTime
+}
+
+Enum Status {
+  PENDING
+  BOOKED
+  COMPLETED
+  CANCELLED
+}
+
 Ref: TherapistCategories.categoryId > Category.id
 
 Ref: TherapistCategories.therapistId > Therapist.id
 
+Ref: Patient.subscriptionId > Subscription.id
+
 Ref: Feedback.patientId > Patient.id
 
 Ref: Feedback.therapistId > Therapist.id
+
+Ref: Booking.patientId > Patient.id
+
+Ref: Booking.therapistId > Therapist.id

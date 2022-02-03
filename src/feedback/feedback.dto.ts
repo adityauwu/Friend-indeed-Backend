@@ -1,11 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsString,
-  IsInt,
-  MaxLength,
-  Max,
-  Min
-} from 'class-validator';
+import { IsString, IsInt, MaxLength, Max, Min } from 'class-validator';
 
 export class FeedbackDto {
   @ApiProperty()
@@ -26,5 +20,4 @@ export class FeedbackDto {
   @ApiProperty()
   @IsString()
   patientId: string;
-
 }
