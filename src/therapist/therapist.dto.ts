@@ -4,6 +4,7 @@ import {
   IsBoolean,
   IsOptional,
   IsInt,
+  IsNumber,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty, PartialType } from '@nestjs/swagger'
@@ -41,13 +42,12 @@ export class TherapistDto {
   @IsBoolean()
   @IsOptional()
   onboarded?: boolean;
-
 }
 
 export class FiltersDto {
 
   @ApiProperty({ required: false })
-  @IsInt()
+  @IsNumber()
   @IsOptional()
   @Type(() => Number)
   rating?: number;
@@ -69,5 +69,3 @@ export class FiltersDto {
   @IsOptional()
   category?: string;
 }
-
-export class UpdateTherapistDto extends PartialType(TherapistDto) {};

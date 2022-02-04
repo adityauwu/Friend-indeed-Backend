@@ -18,7 +18,12 @@ export class TherapistService {
       return { error: e.message, success: false };
     }
   }
-
+  async getTherapist() {
+    return {
+      data: await this.prismaService.therapist.findMany(),
+      success: true,
+    };
+  }
   async getAllTherapists(query: FiltersDto) {
     try {
       let q: any = { onboarded: true, active: true };

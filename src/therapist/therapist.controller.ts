@@ -12,7 +12,10 @@ export default class TherapistController {
   createTherapist(@Body() input: TherapistDto) {
     return this.therapistService.createTherapist(input);
   }
-
+  @Get()
+  async getTherapist() {
+    return this.therapistService.getTherapist();
+  }
   @Get()
   getAllTherapists(@Query() query: FiltersDto) {
     return this.therapistService.getAllTherapists(query);
