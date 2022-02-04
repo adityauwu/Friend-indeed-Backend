@@ -9,7 +9,7 @@ import {
 import { Type } from 'class-transformer';
 import { ApiProperty, PartialType } from '@nestjs/swagger'
 
-export class TherapistDto {
+export class CreateTherapistDto {
   @ApiProperty()
   @IsString()
   name: string;
@@ -44,7 +44,7 @@ export class TherapistDto {
   onboarded?: boolean;
 }
 
-export class FiltersDto {
+export class FilterTherapistDto {
 
   @ApiProperty({ required: false })
   @IsNumber()
@@ -69,4 +69,3 @@ export class FiltersDto {
   @IsOptional()
   category?: string;
 }
-export class UpdateTherapistDto extends TherapistDto {}
