@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Query,
-  Param,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Param, Put } from '@nestjs/common';
 import { TherapistService } from './therapist.service';
 import { FiltersDto, TherapistDto, UpdateTherapistDto } from './therapist.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -36,4 +28,11 @@ export default class TherapistController {
     return this.therapistService.updateTherapist(id, input);
   }
 
+  @Get(':id/patients')
+  getTherapistPatients(
+    @Param('id') id: string,
+    @Query('patientName') patientName?: string,
+  ) {
+    return this.therapistService.getTherapistPatients(id, patientName);
+  }
 }

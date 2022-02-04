@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 generator dbml {
@@ -26,7 +27,11 @@ model Therapist {
   active          Boolean               @default(true)
   feedback        Feedback[]
   categories      TherapistCategories[]
+  qualification   String[]
+  booking         Booking[]
 }
+
+
 
 model TherapistCategories {
   id          String     @id @default(cuid())
@@ -38,14 +43,18 @@ model TherapistCategories {
 }
 
 model Patient {
-  id        String     @id @default(cuid())
-  name      String
-  email     String     @unique
-  imageUrl  String?
-  active    Boolean?   @default(true)
-  createdAt DateTime?  @default(now())
-  updatedAt DateTime?  @updatedAt
-  feedback  Feedback[]
+  id             String              @id @default(cuid())
+  name           String
+  email          String              @unique
+  imageUrl       String?
+  active         Boolean?            @default(true)
+  createdAt      DateTime?           @default(now())
+  updatedAt      DateTime?           @updatedAt
+  feedback       Feedback[]
+  booking        Booking[]
+  subscriptionId String?
+  subscription   Subscription?       @relation(fields: [subscriptionId], references: [id])
+
 }
 
 model Category {
@@ -69,4 +78,35 @@ model Feedback {
   therapist   Therapist @relation(fields: [therapistId], references: [id])
 
   @@unique([patientId, therapistId])
+}
+
+model Subscription {
+  id        String    @id @default(cuid())
+  fee       Int
+  active    Boolean?  @default(true)
+  patientId String?
+  patient   Patient[]
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+}
+
+model Booking {
+  id          String    @id @default(cuid())
+  status      Status    @default(PENDING)
+  fees        Int
+  patientId   String    
+  therapistId String    
+  patient     Patient   @relation(fields: [patientId], references: [id])
+  therapist   Therapist @relation(fields: [therapistId], references: [id])
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
+
+}
+
+enum Status {
+  PENDING
+  BOOKED
+  COMPLETED
+  CANCELLED
 }
