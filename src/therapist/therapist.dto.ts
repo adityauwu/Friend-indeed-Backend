@@ -4,6 +4,7 @@ import {
   IsBoolean,
   IsOptional,
   IsInt,
+  IsNumber,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty, PartialType } from '@nestjs/swagger'
@@ -28,13 +29,14 @@ export class TherapistDto {
   about?: string;
 
   @ApiProperty({ required: false })
-  @IsInt()
+  @IsNumber()
   @IsOptional()
   consultationFee?: number;
 
   @ApiProperty({ required: false })
-  @IsInt()
+  @IsNumber()
   @IsOptional()
+  @Type(() => Number)
   experience?: number;
 
   @ApiProperty({ required: false })
@@ -47,27 +49,36 @@ export class TherapistDto {
 export class FiltersDto {
 
   @ApiProperty({ required: false })
-  @IsInt()
+  @IsNumber()
   @IsOptional()
-  @Type(() => Number)
   rating?: number;
 
   @ApiProperty({ required: false })
-  @IsInt()
+  @IsNumber()
   @IsOptional()
-  @Type(() => Number)
   fee?: number;
 
   @ApiProperty({ required: false })
-  @IsInt()
+  @IsNumber()
   @IsOptional()
-  @Type(() => Number)
   experience?: number;
 
   @ApiProperty({ required: false, description: "Enter the id of category" })
   @IsString()
   @IsOptional()
   category?: string;
+
+  @ApiProperty({ required: true })
+  @IsNumber()
+  @Type(() => Number)
+  page: number;
 }
 
 export class UpdateTherapistDto extends PartialType(TherapistDto) {};
+
+export class PatientFiltersDto {
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  patientName?: string;
+} 

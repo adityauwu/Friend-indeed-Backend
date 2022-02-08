@@ -8,10 +8,13 @@ import {
   Delete,
   Query,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger'
+
 import { PatientService } from './patient.service';
 import { CreatePatientDto, FilterPatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 
+@ApiTags('Patient')
 @Controller('patient')
 export class PatientController {
   constructor(private readonly patientService: PatientService) {}
@@ -28,7 +31,7 @@ export class PatientController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.patientService.findOne(+id);
+    return this.patientService.findOne(id);
   }
 
   @Patch(':id')

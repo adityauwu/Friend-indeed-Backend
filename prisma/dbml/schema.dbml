@@ -7,6 +7,7 @@ Table Therapist {
   name String
   email String [unique, not null]
   imageUrl String
+  bookingUrl String
   about String
   rating Int
   experience Int

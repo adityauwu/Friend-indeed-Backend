@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { IsString, IsInt, MaxLength, Max, Min } from 'class-validator';
 
 export class FeedbackDto {
@@ -21,3 +21,5 @@ export class FeedbackDto {
   @IsString()
   patientId: string;
 }
+
+export class UpdateFeedbackDto extends PartialType(FeedbackDto){}
