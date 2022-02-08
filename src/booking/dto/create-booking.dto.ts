@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsNumber, IsString, MaxLength } from 'class-validator';
 
-export enum Status {
+export enum BookingStatus {
   PENDING = 'PENDING',
   BOOKED = 'BOOKED',
   COMPLETED = 'COMPLETED',
@@ -32,7 +32,7 @@ export class CreateBookingDto {
 
 export class FilterBookingDto {
   @ApiProperty({ required: false })
-  @IsEnum(Status)
+  @IsEnum(BookingStatus)
   @IsOptional()
-  status?: Status;
+  status?: BookingStatus;
 }

@@ -17,6 +17,7 @@ model Therapist {
   name            String?
   email           String                @unique
   imageUrl        String?
+  bookingUrl      String?
   about           String?
   rating          Int?
   experience      Int?

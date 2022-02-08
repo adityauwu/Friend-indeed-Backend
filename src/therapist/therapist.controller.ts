@@ -1,10 +1,10 @@
 import { Body, Controller, Get, Post, Query, Param, Put } from '@nestjs/common';
 import { TherapistService } from './therapist.service';
-import { FiltersDto, TherapistDto, UpdateTherapistDto } from './therapist.dto';
+import { FiltersDto, PatientFiltersDto, TherapistDto, UpdateTherapistDto } from './therapist.dto';
 import { ApiTags } from '@nestjs/swagger';
 
-@Controller('therapist')
 @ApiTags('Therapist')
+@Controller('therapist')
 export default class TherapistController {
   constructor(private readonly therapistService: TherapistService) {}
 
@@ -34,8 +34,8 @@ export default class TherapistController {
   @Get(':id/patients')
   getTherapistPatients(
     @Param('id') id: string,
-    @Query('patientName') patientName?: string,
+    @Query() query: PatientFiltersDto,
   ) {
-    return this.therapistService.getTherapistPatients(id, patientName);
+    return this.therapistService.getTherapistPatients(id, query);
   }
 }

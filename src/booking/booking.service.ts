@@ -1,7 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { PrismaService } from 'src/common/services/prisma.service';
-import { CreateBookingDto, FilterBookingDto, Status } from './dto/create-booking.dto';
+
+import { PrismaService } from '../common/services/prisma.service';
+import { User } from '../common/enums';
+import { BookingStatus, CreateBookingDto, FilterBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
 
 @Injectable()
@@ -74,6 +76,34 @@ export class BookingService {
       };
     } catch (e) {
       Logger.error(e.message);
+      return { error: e.message, success: false };
+    }
+  }
+
+  async upcomingMeetings(userId: string, role: User) {
+    try {
+      let roleMap = {
+        [User.patient]: 'patientId',
+        [User.therapist]: 'therapistId'
+      }
+      const data = await this.prismaService.booking.findMany({
+        where: {
+          [roleMap[role]]: userId,
+          status: BookingStatus.BOOKED
+        },
+        orderBy: {
+          updatedAt: 'desc'
+        },
+        include: {
+          patient: true,
+          therapist: true
+        },
+        skip: 0,
+        take: 3
+      })
+      return { data, success: true }
+    } catch (e) {
+      Logger.error(e.message)
       return { error: e.message, success: false };
     }
   }

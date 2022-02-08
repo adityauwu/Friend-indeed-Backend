@@ -1,11 +1,17 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { FiltersDto, TherapistDto, UpdateTherapistDto } from './therapist.dto';
+
+import { FiltersDto, PatientFiltersDto, TherapistDto, UpdateTherapistDto } from './therapist.dto';
 import { PrismaService } from '../common/services/prisma.service';
-import { STATUS_CODES } from 'http';
-import { Status } from 'src/booking/dto/create-booking.dto';
+import { BookingStatus } from '../booking/dto/create-booking.dto';
+import { User } from '../common/enums';
 @Injectable()
 export class TherapistService {
-  constructor(private readonly prismaService: PrismaService) {}
+
+  PAGE_LIMIT: number
+
+  constructor(private readonly prismaService: PrismaService) {
+    this.PAGE_LIMIT = 10
+  }
 
   async createTherapist(input: TherapistDto) {
     try {
@@ -33,17 +39,24 @@ export class TherapistService {
       if (query.experience) q = { ...q, experience: { lte: query.experience } };
       if (query.fee) q = { ...q, consultationFee: { lte: query.fee } };
 
-      const data = await this.prismaService.therapist.findMany({
-        where: {
-          ...q,
-        },
-        include: {
-          _count: true,
-          categories: { include: { category: true } },
-          feedback: true,
-        },
-      });
-      return { data, success: true };
+      const [data, count] = await Promise.all([
+        this.prismaService.therapist.findMany({
+          where: {
+            ...q,
+          },
+          include: {
+            categories: { include: { category: true } },
+          },
+          skip: (query.page-1) * this.PAGE_LIMIT,
+          take: this.PAGE_LIMIT,
+        }),
+        this.prismaService.therapist.count({
+          where: {
+            ...q,
+          },
+        })
+      ]);
+      return { data: { data, count }, success: true };
     } catch (e) {
       Logger.error(e.message);
       return { error: e.message, success: false };
@@ -52,11 +65,12 @@ export class TherapistService {
 
   async getTherapistById(id: string) {
     try {
+      const res = await this.prismaService.therapist.findUnique({
+        where: { id },
+        include: { categories: { include: { category: true } }, feedback: false },
+      })
       return {
-        data: await this.prismaService.therapist.findUnique({
-          where: { id },
-          include: { categories: true, feedback: true },
-        }),
+        data: { ...res, role: User.therapist, bookingUrl: 'https://calendly.com/joelvinaykumar/15min' },
         success: true,
       };
     } catch (e) {
@@ -77,12 +91,12 @@ export class TherapistService {
     }
   }
   //filter booking status completed and include patients from it
-  async getTherapistPatients(id: string, patientName: string) {
+  async getTherapistPatients(id: string, { patientName }: PatientFiltersDto) {
     try {
       return {
         data: await this.prismaService.booking.findMany({
           where: {
-            status: Status.COMPLETED,
+            status: BookingStatus.COMPLETED,
             therapistId: id,
             patient: {
               active: true,

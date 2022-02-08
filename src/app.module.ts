@@ -9,8 +9,14 @@ import { CategoryModule } from './category/category.module';
 import { BookingModule } from './booking/booking.module';
 import { PatientModule } from './patient/patient.module';
 import { SubscriptionModule } from './subscription/subscription.module';
+import { RazorpayModule } from 'nestjs-razorpay';
+import { PaymentModule } from './payment/payment.module';
 @Module({
   imports: [
+    RazorpayModule.forRoot({
+      key_id: 'rzp_test_Rfo0ocmwPutYw0',
+      key_secret: 'qxqJRwgKH3LUpDILxRaAqUDh',
+    }),
     ThrottlerModule.forRoot({
       ttl: 60,
       limit: 50,
@@ -21,6 +27,7 @@ import { SubscriptionModule } from './subscription/subscription.module';
     BookingModule,
     PatientModule,
     SubscriptionModule,
+    PaymentModule,
   ],
   providers: [
     {
