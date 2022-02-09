@@ -1,4 +1,4 @@
-import { Controller, Post } from '@nestjs/common';
+import { Controller, Post, Req } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 
 @Controller('payment')
@@ -7,5 +7,9 @@ export class PaymentController {
   @Post()
   create() {
     return this.paymentService.create();
+  }
+  @Post('/verification')
+  verification(@Req() req: any) {
+    return this.paymentService.verification(req);
   }
 }

@@ -15,8 +15,8 @@ import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     RazorpayModule.forRoot({
-      key_id: 'rzp_test_Rfo0ocmwPutYw0',
-      key_secret: 'qxqJRwgKH3LUpDILxRaAqUDh',
+      key_id: 'rzp_test_F0sBYBI61kGSeC',
+      key_secret: 'HihQcOHNIr8KJzjOd4RJV8S7',
     }),
     ThrottlerModule.forRoot({
       ttl: 60,
