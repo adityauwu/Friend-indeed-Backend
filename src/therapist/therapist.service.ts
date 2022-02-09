@@ -1,16 +1,21 @@
 import { Injectable, Logger } from '@nestjs/common';
 
-import { FiltersDto, PatientFiltersDto, TherapistDto, UpdateTherapistDto } from './therapist.dto';
+import {
+  FiltersDto,
+  PatientFiltersDto,
+  TherapistDto,
+  UpdateTherapistDto,
+} from './therapist.dto';
 import { PrismaService } from '../common/services/prisma.service';
 import { BookingStatus } from '../booking/dto/create-booking.dto';
 import { User } from '../common/enums';
+import { UpdateCategoryDto } from 'src/category/category.dto';
 @Injectable()
 export class TherapistService {
-
-  PAGE_LIMIT: number
+  PAGE_LIMIT: number;
 
   constructor(private readonly prismaService: PrismaService) {
-    this.PAGE_LIMIT = 10
+    this.PAGE_LIMIT = 10;
   }
 
   async createTherapist(input: TherapistDto) {
@@ -47,14 +52,14 @@ export class TherapistService {
           include: {
             categories: { include: { category: true } },
           },
-          skip: (query.page-1) * this.PAGE_LIMIT,
+          skip: (query.page - 1) * this.PAGE_LIMIT,
           take: this.PAGE_LIMIT,
         }),
         this.prismaService.therapist.count({
           where: {
             ...q,
           },
-        })
+        }),
       ]);
       return { data: { data, count }, success: true };
     } catch (e) {
@@ -67,10 +72,17 @@ export class TherapistService {
     try {
       const res = await this.prismaService.therapist.findUnique({
         where: { id },
-        include: { categories: { include: { category: true } }, feedback: false },
-      })
+        include: {
+          categories: { include: { category: true } },
+          feedback: false,
+        },
+      });
       return {
-        data: { ...res, role: User.therapist, bookingUrl: 'https://calendly.com/joelvinaykumar/15min' },
+        data: {
+          ...res,
+          role: User.therapist,
+          bookingUrl: 'https://calendly.com/joelvinaykumar/15min',
+        },
         success: true,
       };
     } catch (e) {
@@ -83,6 +95,9 @@ export class TherapistService {
       const updated = await this.prismaService.therapist.update({
         where: { id },
         data: { ...input },
+        include: {
+          categories: true,
+        },
       });
       return { data: updated, success: true };
     } catch (e) {
@@ -110,6 +125,27 @@ export class TherapistService {
         }),
         success: true,
       };
+    } catch (e) {
+      Logger.error(e.message);
+      return { error: e.message, success: false };
+    }
+  }
+  async updateTherapistCategories(id: string) {
+    try {
+      const update = await this.prismaService.therapist.update({
+        where: { id },
+        data: {
+          categories: {
+            create: [
+              { category: { connect: { id: 'ckz2kox510323pd3gzfkrl2ai' } } },
+            ],
+          },
+        },
+        include: {
+          categories: true,
+        },
+      });
+      return { data: update, success: true };
     } catch (e) {
       Logger.error(e.message);
       return { error: e.message, success: false };

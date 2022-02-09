@@ -1,6 +1,11 @@
 import { Body, Controller, Get, Post, Query, Param, Put } from '@nestjs/common';
 import { TherapistService } from './therapist.service';
-import { FiltersDto, PatientFiltersDto, TherapistDto, UpdateTherapistDto } from './therapist.dto';
+import {
+  FiltersDto,
+  PatientFiltersDto,
+  TherapistDto,
+  UpdateTherapistDto,
+} from './therapist.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Therapist')
@@ -37,5 +42,9 @@ export default class TherapistController {
     @Query() query: PatientFiltersDto,
   ) {
     return this.therapistService.getTherapistPatients(id, query);
+  }
+  @Put(':id/categories')
+  updateTherapistCategories(@Param('id') id: string) {
+    return this.therapistService.updateTherapistCategories(id);
   }
 }
