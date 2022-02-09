@@ -132,20 +132,20 @@ export class TherapistService {
   }
   async updateTherapistCategories(id: string) {
     try {
-      const update = await this.prismaService.therapist.update({
-        where: { id },
-        data: {
-          categories: {
-            create: [
-              { category: { connect: { id: 'ckz2kox510323pd3gzfkrl2ai' } } },
-            ],
-          },
-        },
-        include: {
-          categories: true,
+      await this.prismaService.therapistCategories.deleteMany({
+        where: {
+          therapistId: 'ckz2kqeqo0378pd3gnfuywud6',
         },
       });
-      return { data: update, success: true };
+      const data = await this.prismaService.therapistCategories.createMany({
+        data: [
+          {
+            therapistId: 'ckz2kqeqo0378pd3gnfuywud6',
+            categoryId: 'ckz2kox510323pd3gzfkrl2ai',
+          },
+        ],
+      });
+      return { data, success: true };
     } catch (e) {
       Logger.error(e.message);
       return { error: e.message, success: false };

@@ -11,6 +11,7 @@ import { PatientModule } from './patient/patient.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { RazorpayModule } from 'nestjs-razorpay';
 import { PaymentModule } from './payment/payment.module';
+import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     RazorpayModule.forRoot({
@@ -22,6 +23,7 @@ import { PaymentModule } from './payment/payment.module';
       limit: 50,
     }),
     TherapistModule,
+    AuthModule,
     FeedbackModule,
     CategoryModule,
     BookingModule,
@@ -39,3 +41,8 @@ import { PaymentModule } from './payment/payment.module';
 })
 export class AppModule {
 }
+
+
+
+
+

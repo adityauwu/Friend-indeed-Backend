@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { PrismaService } from 'src/common/services/prisma.service';
+import { PrismaService } from '../common/services/prisma.service';
 import { User } from '../common/enums';
 import { CreatePatientDto, FilterPatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
@@ -14,7 +14,7 @@ export class PatientService {
       return {
         data: await this.prismaService.patient.create({ data: {
           ...input,
-          imageUrl: `https://avatars.dicebear.com/api/identicon/${input.name}.svg`
+            imageUrl: `https://avatars.dicebear.com/api/identicon/${input.name}.svg`,
         } }),
         success: true,
       };
