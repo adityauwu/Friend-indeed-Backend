@@ -29,20 +29,15 @@ export class TherapistService {
       return { error: e.message, success: false };
     }
   }
-  async getTherapist() {
-    return {
-      data: await this.prismaService.therapist.findMany(),
-      success: true,
-    };
-  }
+
   async getAllTherapists(query: FiltersDto) {
     try {
       let q: any = { onboarded: true, active: true };
       if (query.category)
         q = { ...q, categories: { some: { categoryId: query.category } } };
-      if (query.rating) q = { ...q, rating: { lte: query.rating } };
-      if (query.experience) q = { ...q, experience: { lte: query.experience } };
-      if (query.fee) q = { ...q, consultationFee: { lte: query.fee } };
+      if (query.rating) q = { ...q, rating: { lte: parseInt(query.rating) } };
+      if (query.experience) q = { ...q, experience: { lte: parseInt(query.experience) } };
+      if (query.fee) q = { ...q, consultationFee: { lte: parseInt(query.fee) } };
 
       const [data, count] = await Promise.all([
         this.prismaService.therapist.findMany({
@@ -81,7 +76,6 @@ export class TherapistService {
         data: {
           ...res,
           role: User.therapist,
-          bookingUrl: 'https://calendly.com/joelvinaykumar/15min',
         },
         success: true,
       };

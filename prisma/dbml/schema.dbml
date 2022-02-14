@@ -84,6 +84,7 @@ Table Booking {
   id String [pk]
   status Status [not null, default: 'PENDING']
   fees Int [not null]
+  orderId String [unique]
   patientId String [not null]
   therapistId String [not null]
   patient Patient [not null]

@@ -15,6 +15,10 @@ export class CreateBookingDto {
   @ApiProperty()
   readonly fees: number;
 
+  @ApiProperty()
+  @IsString()
+  orderId: string;
+
   @IsNotEmpty()
   @ApiProperty()
   @IsString()

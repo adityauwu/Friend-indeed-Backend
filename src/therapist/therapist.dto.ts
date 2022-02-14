@@ -48,19 +48,19 @@ export class TherapistDto {
 export class FiltersDto {
 
   @ApiProperty({ required: false })
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  rating?: number;
+  rating?: string;
 
   @ApiProperty({ required: false })
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  fee?: number;
+  fee?: string;
 
   @ApiProperty({ required: false })
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  experience?: number;
+  experience?: string;
 
   @ApiProperty({ required: false, description: "Enter the id of category" })
   @IsString()

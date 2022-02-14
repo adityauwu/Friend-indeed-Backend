@@ -2,44 +2,44 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { InjectRazorpay } from 'nestjs-razorpay';
 import * as Razorpay from 'razorpay';
+import { createHmac } from 'crypto';
+
 import { PrismaService } from 'src/common/services/prisma.service';
-import crypto from 'crypto';
+import { PaymentDto } from './payment.dto';
 @Injectable()
 export class PaymentService {
   public constructor(
     private readonly prismaService: PrismaService,
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
     @InjectRazorpay() private readonly razorpayClient: Razorpay,
   ) {}
-  async create() {
+  async create(input: PaymentDto) {
     try {
-      const options = {
-        amount: 50000, // amount in the smallest currency unit
+      const razorpayOrder = await this.razorpayClient.orders.create({
+        amount: (input.amount * 100).toString(),
         currency: 'INR',
-        receipt: 'order_rcptid_11',
-      };
-      const response = await this.razorpayClient.orders.create(options);
+        receipt: `${input.patientId}_${new Date().getTime()}`,
+      });
+      const data = await this.prismaService.booking.create({
+        data: {
+          therapistId: input.therapistId,
+          patientId: input.patientId,
+          orderId: razorpayOrder?.id,
+          fees: input.amount
+        }
+      })
 
-      return {
-        data: response,
-        success: true,
-      };
+      return { data, success: true };
     } catch (e) {
-      Logger.error(e.message);
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        return {
-          error: 'Uh oh! This category already exists!',
-          success: false,
-        };
-      }
+      Logger.error(e);
       return { error: e.message, success: false };
     }
   }
+
   async verification(req: any) {
     const secret = 'K3yb0ardC4t';
 
-    const shasum = crypto.createHmac('sha256', secret);
+    const shasum = createHmac('sha256', secret);
     shasum.update(JSON.stringify(req.body));
     const digest = shasum.digest('hex');
 

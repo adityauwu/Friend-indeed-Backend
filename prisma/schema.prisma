@@ -96,7 +96,7 @@ model Booking {
   id          String    @id @default(cuid())
   status      Status    @default(PENDING)
   fees        Int
-  orderId     String    @unique()
+  orderId     String?   @unique()
   patientId   String    
   therapistId String    
   patient     Patient   @relation(fields: [patientId], references: [id])

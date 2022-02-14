@@ -7,14 +7,18 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
 import { PatientService } from './patient.service';
 import { CreatePatientDto, FilterPatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
+import { JwtAuthGuard } from '../auth/jwt.guard';
 
 @ApiTags('Patient')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('patient')
 export class PatientController {
   constructor(private readonly patientService: PatientService) {}
