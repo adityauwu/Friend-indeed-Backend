@@ -40,8 +40,5 @@ export default class TherapistController {
   ) {
     return this.therapistService.getTherapistPatients(id, query);
   }
-  @Put(':id/categories')
-  updateTherapistCategories(@Param('id') id: string) {
-    return this.therapistService.updateTherapistCategories(id);
-  }
+
 }

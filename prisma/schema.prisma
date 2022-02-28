@@ -98,12 +98,36 @@ model Booking {
   fees        Int
   orderId     String?   @unique()
   patientId   String    
+  therapistId String
+  treatmentId String
+  treatment   Treatment @relation(fields: [treatmentId], references: [id])    
+  patient     Patient   @relation(fields: [patientId], references: [id])
+  therapist   Therapist @relation(fields: [therapistId], references: [id])
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
+}
+
+model Treatment {
+  id          String    @id @default(cuid())
+  question1   String
+  bookingId   String
+  from        DateTime
+  to          DateTime
+  booking     Booking   @relation(fields: [bookingId], references: [id])
+  patientId   String    
   therapistId String    
   patient     Patient   @relation(fields: [patientId], references: [id])
   therapist   Therapist @relation(fields: [therapistId], references: [id])
   createdAt   DateTime? @default(now())
   updatedAt   DateTime? @updatedAt
+}
 
+model HabitProgress {
+  id          String    @id @default(cuid())
+  answer1     String
+  answeredAt  DateTime
+  treatmentId String
+  treatment   Treatment @relation(fields: [treatmentId], references: [id])
 }
 
 enum Status {

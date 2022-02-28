@@ -38,6 +38,7 @@ export class TherapistService {
       if (query.rating) q = { ...q, rating: { lte: parseInt(query.rating) } };
       if (query.experience) q = { ...q, experience: { lte: parseInt(query.experience) } };
       if (query.fee) q = { ...q, consultationFee: { lte: parseInt(query.fee) } };
+      if (query.name) q = { ...q, name: { contains: query.name, mode: 'insensitive', } }
 
       const [data, count] = await Promise.all([
         this.prismaService.therapist.findMany({
@@ -84,13 +85,16 @@ export class TherapistService {
     }
   }
 
-  async updateTherapist(id: string, input: UpdateTherapistDto) {
+  async updateTherapist(id: string, { categories, ...input }: UpdateTherapistDto) {
     try {
+      if (categories) {
+        await this.updateTherapistCategories(id, categories)
+      }
       const updated = await this.prismaService.therapist.update({
         where: { id },
         data: { ...input },
         include: {
-          categories: true,
+          categories: { include: { category: true } },
         },
       });
       return { data: updated, success: true };
@@ -99,6 +103,7 @@ export class TherapistService {
       return { error: e.message, success: false };
     }
   }
+  
   //filter booking status completed and include patients from it
   async getTherapistPatients(id: string, { patientName }: PatientFiltersDto) {
     try {
@@ -124,20 +129,20 @@ export class TherapistService {
       return { error: e.message, success: false };
     }
   }
-  async updateTherapistCategories(id: string) {
+
+  private async updateTherapistCategories(id: string, categories: string[]) {
     try {
       await this.prismaService.therapistCategories.deleteMany({
         where: {
-          therapistId: 'ckz2kqeqo0378pd3gnfuywud6',
+          therapistId: id,
         },
       });
+      const categoryData = categories.map(c => ({
+        therapistId: id,
+        categoryId: c
+      }))
       const data = await this.prismaService.therapistCategories.createMany({
-        data: [
-          {
-            therapistId: 'ckz2kqeqo0378pd3gnfuywud6',
-            categoryId: 'ckz2kox510323pd3gzfkrl2ai',
-          },
-        ],
+        data: categoryData,
       });
       return { data, success: true };
     } catch (e) {

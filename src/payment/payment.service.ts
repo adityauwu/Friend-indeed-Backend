@@ -37,13 +37,11 @@ export class PaymentService {
   }
 
   async verification(req: any) {
-    const secret = 'K3yb0ardC4t';
+    const secret = process.env.RAZORPAY_SECRET;
 
     const shasum = createHmac('sha256', secret);
     shasum.update(JSON.stringify(req.body));
     const digest = shasum.digest('hex');
-
-    console.log(digest, req.headers['x-razorpay-signature']);
 
     if (digest === req.headers['x-razorpay-signature']) {
       console.log('request is legit');
