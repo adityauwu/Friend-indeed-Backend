@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["fullTextSearch"]
 }
 
@@ -30,9 +30,8 @@ model Therapist {
   categories      TherapistCategories[]
   qualification   String[]
   booking         Booking[]
+  Conversation    Conversation[]
 }
-
-
 
 model TherapistCategories {
   id          String     @id @default(cuid())
@@ -44,18 +43,19 @@ model TherapistCategories {
 }
 
 model Patient {
-  id             String              @id @default(cuid())
+  id             String        @id @default(cuid())
   name           String
-  email          String              @unique
+  email          String        @unique
   imageUrl       String?
-  active         Boolean?            @default(true)
-  createdAt      DateTime?           @default(now())
-  updatedAt      DateTime?           @updatedAt
+  active         Boolean?      @default(true)
+  createdAt      DateTime?     @default(now())
+  updatedAt      DateTime?     @updatedAt
   feedback       Feedback[]
   booking        Booking[]
   subscriptionId String?
-  subscription   Subscription?       @relation(fields: [subscriptionId], references: [id])
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
 
+  Conversation Conversation[]
 }
 
 model Category {
@@ -97,37 +97,31 @@ model Booking {
   status      Status    @default(PENDING)
   fees        Int
   orderId     String?   @unique()
-  patientId   String    
+  patientId   String
   therapistId String
-  treatmentId String
-  treatment   Treatment @relation(fields: [treatmentId], references: [id])    
   patient     Patient   @relation(fields: [patientId], references: [id])
   therapist   Therapist @relation(fields: [therapistId], references: [id])
   createdAt   DateTime? @default(now())
   updatedAt   DateTime? @updatedAt
 }
 
-model Treatment {
-  id          String    @id @default(cuid())
-  question1   String
-  bookingId   String
-  from        DateTime
-  to          DateTime
-  booking     Booking   @relation(fields: [bookingId], references: [id])
-  patientId   String    
-  therapistId String    
-  patient     Patient   @relation(fields: [patientId], references: [id])
-  therapist   Therapist @relation(fields: [therapistId], references: [id])
-  createdAt   DateTime? @default(now())
-  updatedAt   DateTime? @updatedAt
+model Conversation {
+  id         String    @id @default(cuid())
+  content    String
+  senderId   String
+  receiverId String
+  patient    Patient   @relation(fields: [senderId], references: [id])
+  therapist  Therapist @relation(fields: [receiverId], references: [id])
+  createdAt  DateTime? @default(now())
+  readAt     String?
+
 }
 
 model HabitProgress {
-  id          String    @id @default(cuid())
+  id          String   @id @default(cuid())
   answer1     String
   answeredAt  DateTime
   treatmentId String
-  treatment   Treatment @relation(fields: [treatmentId], references: [id])
 }
 
 enum Status {

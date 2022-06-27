@@ -11,6 +11,7 @@ import { PatientModule } from './patient/patient.module';
 import { RazorpayModule } from 'nestjs-razorpay';
 import { PaymentModule } from './payment/payment.module';
 import { AuthModule } from './auth/auth.module';
+import { ChatModule } from './chat/chat.module';
 @Module({
   imports: [
     RazorpayModule.forRoot({
@@ -28,6 +29,7 @@ import { AuthModule } from './auth/auth.module';
     BookingModule,
     PatientModule,
     PaymentModule,
+    ChatModule,
   ],
   providers: [
     {

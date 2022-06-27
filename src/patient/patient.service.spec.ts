@@ -63,16 +63,16 @@ describe('PatientService', () => {
   //   });
   // });
 
-  // describe('insertOne', () => {
-  //   it('should successfully insert a patient', () => {
-  //     expect(
-  //       service.create({
-  //         name: 'testCat1',
-  //         email: 'jv@gmail.com'
-  //       }),
-  //     ).resolves.toEqual(onePatient);
-  //   });
-  // });
+  describe('insertOne', () => {
+    it('should successfully insert a patient', () => {
+      expect(
+        service.create({
+          name: 'testCat1',
+          email: 'jv@gmail.com'
+        }),
+      ).resolves.toEqual(onePatient);
+    });
+  });
 
   // describe('updateOne', () => {
   //   it('should call the update method', async () => {

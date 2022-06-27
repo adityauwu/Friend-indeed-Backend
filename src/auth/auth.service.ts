@@ -2,6 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../common/enums';
 import { PrismaService } from '../common/services/prisma.service';
+import { CreateLoginDto } from './dto/create-login.dto';
 
 @Injectable()
 export class AuthService {
@@ -11,8 +12,8 @@ export class AuthService {
     private jwtService: JwtService
   ) {}
   
-  async login(role: User, input: any) {
-    const { name, email, imageUrl } = input?.profileObj
+  async login(role: User, CreateLoginDto: CreateLoginDto) {
+    const { name, email, imageUrl } = CreateLoginDto
     try {
       if(role === User.patient) {
         const foundUser = await this.prismaService.patient.findFirst({

@@ -15,7 +15,7 @@ import { JwtModule } from '@nestjs/jwt';
       signOptions: {
         expiresIn: `${60*60*6}s`,
       }
-    }),
+    })
   ],
   controllers: [AuthController],
   providers: [AuthService, GoogleStrategy, JwtStrategy, PrismaService],

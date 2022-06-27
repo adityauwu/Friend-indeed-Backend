@@ -25,7 +25,7 @@ export class PaymentService {
           therapistId: input.therapistId,
           patientId: input.patientId,
           orderId: razorpayOrder?.id,
-          fees: input.amount
+          fees: input.amount,
         }
       })
 
