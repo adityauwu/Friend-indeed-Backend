@@ -1,17 +1,13 @@
 import { IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateConversationDTO {
+export class FetchConversationDTO {
   @IsNotEmpty()
   @ApiProperty()
-  senderId: string;
+  patientId: string;
 
   @IsNotEmpty()
   @ApiProperty()
-  receiverId: string;
-
-  @IsNotEmpty()
-  @ApiProperty()
-  content: string;
+  therapistId: string;
 
 }

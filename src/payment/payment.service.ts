@@ -1,5 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+const { PrismaClient } = require('@prisma/client')
+
+const Prisma = new PrismaClient()
 import { InjectRazorpay } from 'nestjs-razorpay';
 import * as Razorpay from 'razorpay';
 import { createHmac } from 'crypto';

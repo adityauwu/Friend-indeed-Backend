@@ -14,6 +14,7 @@ export class AuthService {
   
   async login(role: User, CreateLoginDto: CreateLoginDto) {
     const { name, email, imageUrl } = CreateLoginDto
+    console.log(name + "->auth.service.ts")
     try {
       if(role === User.patient) {
         const foundUser = await this.prismaService.patient.findFirst({
@@ -48,6 +49,7 @@ export class AuthService {
         return { access_token: this.jwtService.sign(createdUser) }
       }
     } catch (e: any) {
+      console.log(e)
       return new HttpException(e.message, 400)
     }
   }

@@ -20,7 +20,6 @@ Table Therapist {
   categories TherapistCategories [not null]
   qualification String [not null]
   booking Booking [not null]
-  Conversation Conversation [not null]
 }
 
 Table TherapistCategories {
@@ -44,7 +43,6 @@ Table Patient {
   booking Booking [not null]
   subscriptionId String
   subscription Subscription
-  Conversation Conversation [not null]
 }
 
 Table Category {
@@ -99,9 +97,7 @@ Table Conversation {
   id String [pk]
   content String [not null]
   senderId String [not null]
-  receiverId String [not null]
-  patient Patient [not null]
-  therapist Therapist [not null]
+  recieverId String [not null]
   createdAt DateTime [default: `now()`]
   readAt String
 }
@@ -111,6 +107,12 @@ Table HabitProgress {
   answer1 String [not null]
   answeredAt DateTime [not null]
   treatmentId String [not null]
+}
+
+Table NewsletterSubs {
+  id String [pk]
+  email String [not null]
+  name String [not null]
 }
 
 Enum Status {
@@ -133,7 +135,3 @@ Ref: Feedback.therapistId > Therapist.id
 Ref: Booking.patientId > Patient.id
 
 Ref: Booking.therapistId > Therapist.id
-
-Ref: Conversation.senderId > Patient.id
-
-Ref: Conversation.receiverId > Therapist.id

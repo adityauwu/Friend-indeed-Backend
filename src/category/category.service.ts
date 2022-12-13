@@ -1,5 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+const { PrismaClient } = require('@prisma/client')
+
+const Prisma = new PrismaClient()
 import { PrismaService } from '../common/services/prisma.service';
 import {
   CategoryDto,

@@ -13,7 +13,7 @@ datasource db {
 }
 
 model Therapist {
-  id              String                @id @default(cuid())
+  id              String                @id @default(uuid())
   name            String?
   email           String                @unique
   imageUrl        String?
@@ -30,11 +30,11 @@ model Therapist {
   categories      TherapistCategories[]
   qualification   String[]
   booking         Booking[]
-  Conversation    Conversation[]
+
 }
 
 model TherapistCategories {
-  id          String     @id @default(cuid())
+  id          String     @id @default(uuid())
   therapistId String?
   categoryId  String?
   experience  Int        @default(0)
@@ -43,7 +43,7 @@ model TherapistCategories {
 }
 
 model Patient {
-  id             String        @id @default(cuid())
+  id             String        @id @default(uuid())
   name           String
   email          String        @unique
   imageUrl       String?
@@ -55,11 +55,10 @@ model Patient {
   subscriptionId String?
   subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
 
-  Conversation Conversation[]
 }
 
 model Category {
-  id         String                @id @default(cuid())
+  id         String                @id @default(uuid())
   name       String                @unique
   active     Boolean?              @default(true)
   createdAt  DateTime?             @default(now())
@@ -68,7 +67,7 @@ model Category {
 }
 
 model Feedback {
-  id          String    @id @default(cuid())
+  id          String    @id @default(uuid())
   patientId   String
   therapistId String
   rating      Int
@@ -82,7 +81,7 @@ model Feedback {
 }
 
 model Subscription {
-  id        String    @id @default(cuid())
+  id        String    @id @default(uuid())
   fee       Int
   active    Boolean?  @default(true)
   patientId String?
@@ -93,7 +92,7 @@ model Subscription {
 }
 
 model Booking {
-  id          String    @id @default(cuid())
+  id          String    @id @default(uuid())
   status      Status    @default(PENDING)
   fees        Int
   orderId     String?   @unique()
@@ -106,23 +105,28 @@ model Booking {
 }
 
 model Conversation {
-  id         String    @id @default(cuid())
-  content    String
+  id         String    @id @default(uuid())
+  content    String    
   senderId   String
-  receiverId String
-  patient    Patient   @relation(fields: [senderId], references: [id])
-  therapist  Therapist @relation(fields: [receiverId], references: [id])
+  recieverId String
   createdAt  DateTime? @default(now())
   readAt     String?
-
 }
 
 model HabitProgress {
-  id          String   @id @default(cuid())
+  id          String   @id @default(uuid())
   answer1     String
   answeredAt  DateTime
   treatmentId String
 }
+
+model NewsletterSubs {
+  id    String @id @default(uuid())
+  email String
+  name  String
+}
+
+
 
 enum Status {
   PENDING

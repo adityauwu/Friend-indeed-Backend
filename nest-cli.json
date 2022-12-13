@@ -10,6 +10,10 @@
           "dtoFileNameSuffix": [".model.ts", ".request.ts", ".response.ts"]
         }
       }
-    ]
+    ],
+    
+     "assets": ["mail/templates/**/*"],
+     "watchAssets": true  
+  
   }
 }

@@ -1,12 +1,12 @@
 version: '3.7'
 services:
   nest-api:
-    container_name: nest-api
+    container_name: fi-nest-api
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 3000:3000
+      - 5000:5000
     depends_on:
       - postgres
     env_file:
@@ -14,7 +14,7 @@ services:
 
   postgres:
     image: postgres:13
-    container_name: postgres
+    container_name: fi-postgres
     restart: always
     ports:
       - 5432:5432

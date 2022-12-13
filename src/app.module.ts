@@ -12,6 +12,12 @@ import { RazorpayModule } from 'nestjs-razorpay';
 import { PaymentModule } from './payment/payment.module';
 import { AuthModule } from './auth/auth.module';
 import { ChatModule } from './chat/chat.module';
+import { NewsletterService } from './newsletter/newsletter.service';
+import { NewsletterController } from './newsletter/newsletter.controller';
+
+import { NewsletterModule } from './newsletter/newsletter.module';
+import { MailModule } from './mail/mail.module';
+
 @Module({
   imports: [
     RazorpayModule.forRoot({
@@ -30,14 +36,18 @@ import { ChatModule } from './chat/chat.module';
     PatientModule,
     PaymentModule,
     ChatModule,
+    NewsletterModule,
+    MailModule,
+   
   ],
   providers: [
     {
       provide: APP_GUARD,
       useClass: ThrottlerBehindProxyGuard,
     },
+    NewsletterService,
   ],
-  controllers: [AppController],
+  controllers: [AppController, NewsletterController],
 })
 export class AppModule {
 }

@@ -1,5 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+const { PrismaClient } = require('@prisma/client')
+
+const Prisma = new PrismaClient()
+// use `prisma` in your application to read and write data in your DB
+
 
 import { PrismaService } from '../common/services/prisma.service';
 import { User } from '../common/enums';

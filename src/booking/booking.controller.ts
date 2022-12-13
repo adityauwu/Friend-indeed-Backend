@@ -8,8 +8,10 @@ import {
   Delete,
   Query,
   Logger,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt.guard';
 import { User } from '../common/enums';
 import { BookingService } from './booking.service';
 import { CreateBookingDto, FilterBookingDto } from './dto/create-booking.dto';
@@ -21,6 +23,8 @@ export class BookingController {
   constructor(private readonly bookingService: BookingService) {}
 
   @Post()
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   create(@Body() createBookingDto: CreateBookingDto) {
     return this.bookingService.create(createBookingDto);
   }
