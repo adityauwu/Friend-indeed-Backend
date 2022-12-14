@@ -99,6 +99,7 @@ export class TherapistService {
       });
       return { data: updated, success: true };
     } catch (e) {
+      console.log("error while updating the therapist")
       Logger.error(e.message);
       return { error: e.message, success: false };
     }

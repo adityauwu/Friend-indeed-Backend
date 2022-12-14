@@ -32,17 +32,47 @@ export class PatientService {
     }
   }
 
-  async findAll({ active }: FilterPatientDto) {
+  // async findAll( data : FilterPatientDto) {
+  //   try {
+  //     return {
+  //       data: await this.prismaService.patient.findMany({ where: {...data} }),
+  //       success: true,
+  //     };
+  //   } catch (e) {
+  //     Logger.error(e.message);
+  //     return { error: e.message, success: false };
+  //   }
+  // }
+
+  async findAll(query: FilterPatientDto) {
     try {
-      return {
-        data: await this.prismaService.patient.findMany({ where: { active } }),
-        success: true,
-      };
+      let q: any;
+      // if (query.company) q = { ...q, company: { lte: parseInt(query.company) } };
+       if (query.username) q = { ...q, name: { contains: query.username, mode: 'insensitive', } }
+       if (query.email) q = { ...q, email: { contains: query.email, mode: 'insensitive', } }
+     
+
+      const [data, count] = await Promise.all([
+        this.prismaService.patient.findMany({
+          where: {
+            ...q,
+          },
+        }),
+        this.prismaService.patient.count({
+          where: {
+            ...q,
+          },
+        }),
+      ]);
+      return { data: { data, count }, success: true };
     } catch (e) {
       Logger.error(e.message);
       return { error: e.message, success: false };
     }
   }
+
+
+
 
   async findOne(id: string) {
     try {

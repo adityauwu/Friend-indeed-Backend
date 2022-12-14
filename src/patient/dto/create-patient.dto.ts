@@ -22,9 +22,28 @@ export class CreatePatientDto {
   active?: boolean;
 }
 export class FilterPatientDto {
-  @ApiProperty()
-  @IsBoolean()
+  // @ApiProperty()
+  // @IsBoolean()
+  // @IsOptional()
+  // @Type(() => Boolean)
+  // active?: boolean;
+
+  @ApiProperty({ required: false })
+  @IsString()
   @IsOptional()
-  @Type(() => Boolean)
-  active?: boolean;
+  @Type(() => String)
+  username? : string;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  @Type(() => String)
+  email? :string;
+
+  // @ApiProperty({ required: false })
+  // @IsString()
+  // @Type(() => String)
+  // company? : string;
+
+
 }

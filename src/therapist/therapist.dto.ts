@@ -19,6 +19,8 @@ export class TherapistDto {
   @IsString()
   email: string;
 
+
+
   @ApiProperty({ required: false })
   @IsUrl()
   @IsOptional()
@@ -32,6 +34,7 @@ export class TherapistDto {
   @ApiProperty({ required: false })
   @IsNumber()
   @IsOptional()
+  @Type(() => Number)
   consultationFee?: number;
 
   @ApiProperty({ required: false })
@@ -44,6 +47,12 @@ export class TherapistDto {
   @IsBoolean()
   @IsOptional()
   onboarded?: boolean;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  bookingUrl?: string;
+
 }
 
 export class FiltersDto {
