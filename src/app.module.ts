@@ -14,9 +14,13 @@ import { AuthModule } from './auth/auth.module';
 import { ChatModule } from './chat/chat.module';
 import { NewsletterService } from './newsletter/newsletter.service';
 import { NewsletterController } from './newsletter/newsletter.controller';
+import { FriendService } from './friend/friend.service';
+import { FriendController } from './friend/friend.controller';
+import { FriendModule } from './friend/friend.module';
 
 import { NewsletterModule } from './newsletter/newsletter.module';
 import { MailModule } from './mail/mail.module';
+import { MoodModule } from './mood/mood.module';
 
 @Module({
   imports: [
@@ -38,6 +42,8 @@ import { MailModule } from './mail/mail.module';
     ChatModule,
     NewsletterModule,
     MailModule,
+    FriendModule,
+    MoodModule
    
   ],
   providers: [

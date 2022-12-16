@@ -45,6 +45,21 @@ Table Patient {
   subscription Subscription
 }
 
+Table Friend {
+  id String [pk]
+  userId String [not null]
+  friendId String [not null]
+  friendName String [not null]
+  imageUrl String [not null]
+  isFriend Boolean [not null, default: true]
+  followedOn DateTime [default: `now()`]
+}
+
+Table Mood {
+  UserId String [pk]
+  userMood Int [not null, default: 5]
+}
+
 Table Category {
   id String [pk]
   name String [unique, not null]

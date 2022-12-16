@@ -58,6 +58,26 @@ model Patient {
 
 }
 
+
+model Friend{
+ id           String        @id@default(uuid())
+ userId       String        
+ friendId     String        
+ friendName   String
+ imageUrl     String
+ isFriend     Boolean       @default(true)
+ followedOn   DateTime?     @default(now())
+
+}
+
+model Mood{
+//  id         String          @id @default(uuid())
+ UserId     String          @id
+ userMood   Int             @default(5)
+
+
+}
+
 model Category {
   id         String                @id @default(uuid())
   name       String                @unique
