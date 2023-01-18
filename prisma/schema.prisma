@@ -18,6 +18,7 @@ model Therapist {
   email           String                @unique
   imageUrl        String?
   bookingUrl      String?
+  googleMeetUrl   String?               @default("https://meet.google.com/")
   about           String?
   rating          Int?
   experience      Int?
@@ -28,6 +29,7 @@ model Therapist {
   active          Boolean               @default(true)
   feedback        Feedback[]
   categories      TherapistCategories[]
+  chatSubscription  ChatSubscription[]
   qualification   String[]
   booking         Booking[]
 
@@ -53,6 +55,7 @@ model Patient {
  
   feedback       Feedback[]
   booking        Booking[]
+  chatSubscription  ChatSubscription[]
   subscriptionId String?
   subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
 
@@ -69,6 +72,21 @@ model Friend{
  followedOn   DateTime?     @default(now())
 
 }
+
+
+
+model ChatSubscription{
+ id           String        @id@default(uuid())
+ patientId       String        
+ therapistId     String        
+ isSubscribed     Boolean       @default(true)
+ SubscribedOn   DateTime?     @default(now())
+  patient     Patient   @relation(fields: [patientId], references: [id])
+  therapist   Therapist @relation(fields: [therapistId], references: [id])
+  @@unique([patientId, therapistId])
+
+}
+
 
 model Mood{
 //  id         String          @id @default(uuid())
@@ -98,7 +116,7 @@ model Feedback {
   patient     Patient   @relation(fields: [patientId], references: [id])
   therapist   Therapist @relation(fields: [therapistId], references: [id])
 
-  @@unique([patientId, therapistId])
+  // @@unique([patientId, therapistId])
 }
 
 model Subscription {

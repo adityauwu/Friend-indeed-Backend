@@ -23,7 +23,7 @@ export class FeedbackService {
       await this.prismaService.therapist.update({
         where: { id: input.therapistId },
         data: {
-          rating: response._avg.rating
+          rating: Math.floor(response._avg.rating) 
         }
       })
       return {
@@ -69,7 +69,7 @@ export class FeedbackService {
       const updatedFeedback = await this.prismaService.feedback.update({ 
           where: { id },
           data: {
-            rating: input.rating,
+            rating: Math.floor(input.rating),
             comment: input.comment,
           }
         })
@@ -81,7 +81,7 @@ export class FeedbackService {
       await this.prismaService.therapist.update({
         where: { id: input.therapistId },
         data: {
-          rating: response._avg.rating
+          rating: Math.floor(response._avg.rating) 
         }
       })
       return {
@@ -105,7 +105,7 @@ export class FeedbackService {
       await this.prismaService.therapist.update({
         where: { id: therapistId },
         data: {
-          rating: response._avg.rating
+          rating: Math.floor(response._avg.rating) 
         }
       })
     } catch (e) {

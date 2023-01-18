@@ -8,6 +8,7 @@ Table Therapist {
   email String [unique, not null]
   imageUrl String
   bookingUrl String
+  googleMeetUrl String [default: 'https://meet.google.com/']
   about String
   rating Int
   experience Int
@@ -18,6 +19,7 @@ Table Therapist {
   active Boolean [not null, default: true]
   feedback Feedback [not null]
   categories TherapistCategories [not null]
+  chatSubscription ChatSubscription [not null]
   qualification String [not null]
   booking Booking [not null]
 }
@@ -41,6 +43,7 @@ Table Patient {
   updatedAt DateTime
   feedback Feedback [not null]
   booking Booking [not null]
+  chatSubscription ChatSubscription [not null]
   subscriptionId String
   subscription Subscription
 }
@@ -53,6 +56,20 @@ Table Friend {
   imageUrl String [not null]
   isFriend Boolean [not null, default: true]
   followedOn DateTime [default: `now()`]
+}
+
+Table ChatSubscription {
+  id String [pk]
+  patientId String [not null]
+  therapistId String [not null]
+  isSubscribed Boolean [not null, default: true]
+  SubscribedOn DateTime [default: `now()`]
+  patient Patient [not null]
+  therapist Therapist [not null]
+
+  indexes {
+    (patientId, therapistId) [unique]
+  }
 }
 
 Table Mood {
@@ -79,10 +96,6 @@ Table Feedback {
   updatedAt DateTime
   patient Patient [not null]
   therapist Therapist [not null]
-
-  indexes {
-    (patientId, therapistId) [unique]
-  }
 }
 
 Table Subscription {
@@ -142,6 +155,10 @@ Ref: TherapistCategories.categoryId > Category.id
 Ref: TherapistCategories.therapistId > Therapist.id
 
 Ref: Patient.subscriptionId > Subscription.id
+
+Ref: ChatSubscription.patientId > Patient.id
+
+Ref: ChatSubscription.therapistId > Therapist.id
 
 Ref: Feedback.patientId > Patient.id
 

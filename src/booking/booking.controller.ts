@@ -35,7 +35,7 @@ export class BookingController {
   }
 
   @Get(':userId/upcoming-meetings')
-  findUpcomingMeetings(@Param('userId') userId: string, @Query('role') role: User) {
+  findUpcomingMeetings(@Param('userId') userId: string, @Query('role') role: string) {
     return this.bookingService.upcomingMeetings(userId, role);
   }
 
@@ -48,6 +48,18 @@ export class BookingController {
   update(@Param('id') id: string, @Body() updateBookingDto: UpdateBookingDto) {
     return this.bookingService.update(id, updateBookingDto);
   }
+
+
+  @Patch('confirmBooking/:id')
+  confirmBooking(@Param('id') id: string) {
+    return this.bookingService.confirmBooking(id);
+  }
+
+
+   @Get('findid/:orderId')
+    findId(@Param('orderId') orderId : string){
+      return this.bookingService.findId(orderId)
+    }
 
   @Delete(':id')
   remove(@Param('id') id: string) {

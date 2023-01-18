@@ -23,9 +23,10 @@ import {
   export class FriendController {
     constructor(private friendService: FriendService) {}
   
-    @Post()
-    create(@Body() createFriendDto: CreateFriendDto) {
-      return this.friendService.create(createFriendDto);
+    @Post('/add/:userId')
+    create(@Body() createFriendDto: CreateFriendDto ,@Param('userId') userId: string) {
+      console.log(userId);
+      return this.friendService.create(userId,createFriendDto);
     }
     
     // @Post()

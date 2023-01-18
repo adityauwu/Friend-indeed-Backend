@@ -51,6 +51,47 @@ export class BookingService {
     }
   }
 
+  async findId( orderId: string) {
+    try {
+      return {
+        data: await this.prismaService.booking.findUnique({
+          where: {
+             orderId : orderId
+          },
+         
+        }),
+        success: true,
+      };
+    } catch (e) {
+      Logger.error(e.message);
+      return { error: e.message, success: false };
+    }
+  }
+  
+  
+
+  async confirmBooking(id: string) {
+    try {
+      return {
+        data: await this.prismaService.booking.update({
+          where: { id },
+          data: { 
+            status : 'BOOKED'
+           },
+        }),
+        success: true,
+      };
+    } catch (e) {
+      Logger.error(e.message);
+      return { error: e.message, success: false };
+    }
+  }
+
+
+
+
+
+  
   findOne(id: number) {
     return `This action returns a #${id} booking`;
   }
@@ -70,6 +111,8 @@ export class BookingService {
     }
   }
 
+
+
   async remove(id: string) {
     try {
       return {
@@ -84,12 +127,15 @@ export class BookingService {
     }
   }
 
-  async upcomingMeetings(userId: string, role: User) {
+  async upcomingMeetings(userId: string, role: string) {
+    
+    
     try {
       let roleMap = {
-        [User.patient]: 'patientId',
-        [User.therapist]: 'therapistId'
+        ['Patient']: 'patientId',
+        ['Therapist']: 'therapistId'
       }
+      
       const data = await this.prismaService.booking.findMany({
         where: {
           [roleMap[role]]: userId,
@@ -105,6 +151,8 @@ export class BookingService {
         skip: 0,
         take: 3
       })
+      console.log("Fetching booked sessions for----->"+ userId+ "------>With the role--->"+ role+"--------->");
+      console.log(data);
       return { data, success: true }
     } catch (e) {
       Logger.error(e.message)

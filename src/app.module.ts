@@ -21,12 +21,13 @@ import { FriendModule } from './friend/friend.module';
 import { NewsletterModule } from './newsletter/newsletter.module';
 import { MailModule } from './mail/mail.module';
 import { MoodModule } from './mood/mood.module';
+import { ChatsubscriptionModule } from './chatsubscription/chatsubscription.module';
 
 @Module({
   imports: [
     RazorpayModule.forRoot({
-      key_id: 'rzp_test_F0sBYBI61kGSeC',
-      key_secret: 'HihQcOHNIr8KJzjOd4RJV8S7',
+      key_id: 'rzp_test_cevPczkfMipFQF',
+      key_secret: 'PFnusY4i9McIATFnRTKu87yG',
     }),
     ThrottlerModule.forRoot({
       ttl: 60,
@@ -43,7 +44,8 @@ import { MoodModule } from './mood/mood.module';
     NewsletterModule,
     MailModule,
     FriendModule,
-    MoodModule
+    MoodModule,
+    ChatsubscriptionModule
    
   ],
   providers: [

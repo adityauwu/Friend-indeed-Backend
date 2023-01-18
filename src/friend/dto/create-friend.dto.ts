@@ -5,15 +5,11 @@ import { IsNumber, IsString, MaxLength } from 'class-validator';
 export class CreateFriendDto {
   @ApiProperty()
   @IsString()
-  userId: string;
+  id: string;
 
   @ApiProperty()
   @IsString()
-  friendId: string;
-
-  @ApiProperty()
-  @IsString()
-  friendName: string;
+  name: string;
 
   @ApiProperty({ required: false })
   @IsUrl()

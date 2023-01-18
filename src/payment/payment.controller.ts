@@ -10,7 +10,9 @@ export class PaymentController {
     return this.paymentService.create(input);
   }
   @Post('/verification')
-  verification(@Req() req: any) {
-    return this.paymentService.verification(req);
+  verification(@Req() req: any, @Body() input:any) {
+    //console.log(input);
+    //console.log("the input is -----^")
+    return this.paymentService.verification(req, input);
   }
 }

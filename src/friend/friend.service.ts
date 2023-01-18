@@ -11,21 +11,17 @@ import { CreateFriendDto } from './dto/create-friend.dto';
 export class FriendService {
   constructor(private prismaService: PrismaService) {}
 
-  async create(input: CreateFriendDto) {
+  async create(userId: string ,input: CreateFriendDto) {
+    console.log(input + "----->" + userId);
     try {
       
        return {
         
-        count: this.prismaService.friend.count({
-          where: {
-            userId:input.userId,
-            friendId : input.friendId
-          },
-        }),
-        
         data: await this.prismaService.friend.create({ data: {
-          ...input,
+            friendId:input.id,
+            friendName: input.name,
             imageUrl: input.imageUrl,
+            userId : userId
         } }),
         success: true,
       };
